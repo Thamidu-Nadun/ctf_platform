@@ -1,0 +1,25 @@
+{
+  "name": "the_platform",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "frontend": "cd frontend && pnpm dev",
+    "backend": "cd backend && pnpm dev",
+    "start": "concurrently \"pnpm run frontend\" \"pnpm run backend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.15.1",
+      "onFail": "download"
+    }
+  },
+  "type": "module",
+  "dependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
