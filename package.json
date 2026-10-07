@@ -2,11 +2,11 @@
   "name": "the_platform",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "frontend": "cd frontend && pnpm dev",
-    "backend": "cd backend && pnpm dev",
-    "start": "concurrently \"pnpm run frontend\" \"pnpm run backend\""
+    "frontend": "cd frontend && pnpm run dev",
+    "backend": "cd backend && pnpm run dev",
+    "start": "concurrently \"pnpm run frontend\" \"pnpm run backend\"",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,11 @@
   },
   "type": "module",
   "dependencies": {
-    "concurrently": "^10.0.5"
+    "concurrently": "^10.0.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --fix"
   }
 }
