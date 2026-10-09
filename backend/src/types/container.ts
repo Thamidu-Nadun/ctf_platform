@@ -12,4 +12,9 @@ type CreateContainerOptions = {
   timeout?: number;
 };
 
-export type { Container, CreateContainerOptions };
+type DockerProgressEvent = {
+  status?: string;
+  progress?: string;
+};
+
+export type { Container, CreateContainerOptions, DockerProgressEvent };

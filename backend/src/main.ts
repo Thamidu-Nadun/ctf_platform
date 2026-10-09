@@ -1,6 +1,8 @@
 import express from "express";
 import instanceController from "./controller/instanceController";
+import userController from "./controller/user.controller";
 import errorHandler from "./middleware/errorHandler";
+import "dotenv/config";
 
 const app = express();
 app.use(express.json());
@@ -10,6 +12,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/instance", instanceController);
+app.use("/user", userController);
 app.use(errorHandler);
 
 app.listen(3000, () => {

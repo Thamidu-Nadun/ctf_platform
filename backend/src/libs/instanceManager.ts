@@ -1,4 +1,6 @@
 import { getDocker } from "../config/config";
+import crypto from "crypto";
+import type { DockerProgressEvent } from "../types/container";
 
 type Container = {
   id: string;
@@ -26,7 +28,7 @@ const createInstance = async (
   opt: CreateContainerOptions,
 ): Promise<Container> => {
   const { imageName, timeout = 30000 } = opt;
-
+  console.log(`create instance with image ${imageName} and timeout ${timeout}`);
   try {
     // 1. check if the image exists
     const isImageExists = await checkImageExists(imageName);
@@ -37,7 +39,7 @@ const createInstance = async (
       await pullImage(imageName);
     }
   } catch (err) {
-    throw new Error(`Failed to pull image: ${err}`);
+    throw new Error(`Failed to pull image: ${err}`, { cause: err });
   }
   try {
     // 2. if it is, create the container
@@ -46,7 +48,7 @@ const createInstance = async (
     // return the container id
     return container;
   } catch (err) {
-    throw new Error(`Failed to create container: ${err}`);
+    throw new Error(`Failed to create container: ${err}`, { cause: err });
   }
 };
 
@@ -61,7 +63,7 @@ const createContainer = async (
   timeout: number = 30000,
 ): Promise<Container> => {
   try {
-    const instanceName = `instance-${Date.now()}`;
+    const instanceName = `instance-${crypto.randomUUID().toString()}`;
     const container = await docker.createContainer({
       Image: imageName,
       name: instanceName,
@@ -78,7 +80,7 @@ const createContainer = async (
       timeout,
     };
   } catch (err) {
-    throw new Error(`Failed to create container: ${err}`);
+    throw new Error(`Failed to create container: ${err}`, { cause: err });
   }
 };
 
@@ -92,6 +94,7 @@ const checkImageExists = async (imageName: string): Promise<boolean> => {
     await docker.getImage(imageName).inspect();
     return true;
   } catch (err) {
+    console.error(`Image ${imageName} does not exist: ${err}`);
     return false;
   }
 };
@@ -106,11 +109,11 @@ const pullImage = async (imageName: string): Promise<void> => {
   return new Promise((res, rej) => {
     docker.modem.followProgress(
       stream,
-      (err: any, output: any) => {
+      (err) => {
         if (err) rej(err);
-        else res(output);
+        else res();
       },
-      (event: any) => {
+      (event: DockerProgressEvent) => {
         if (event.status) {
           console.log(event.status, event.progress || "");
         }

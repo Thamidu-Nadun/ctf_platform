@@ -6,6 +6,7 @@
     "frontend": "cd frontend && pnpm run dev",
     "backend": "cd backend && pnpm run dev",
     "start": "concurrently \"pnpm run frontend\" \"pnpm run backend\"",
+    "lint": "eslint . --ext .ts,.tsx,.js",
     "prepare": "husky"
   },
   "keywords": [],
@@ -26,5 +27,8 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --fix"
+  },
+  "devDependencies": {
+    "eslint": "^10.12.0"
   }
 }
