@@ -19,9 +19,10 @@ export const ParticipantTable = pgTable(
       .references(() => EventTable.id),
     joinedAt: timestamp("joined_at").notNull().defaultNow(),
   },
-  (table) => {
-    return {
-      pk: primaryKey({ columns: [table.userId, table.eventId] }),
-    };
-  },
+  (table) => [
+    primaryKey({
+      name: "participant_pk",
+      columns: [table.userId, table.eventId],
+    }),
+  ],
 );

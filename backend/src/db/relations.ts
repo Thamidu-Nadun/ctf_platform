@@ -60,8 +60,18 @@ export const relations = defineRelations(
 
     // EventTable relations
     EventTable: {
-      participants: r.many.ParticipantTable(),
-      submissions: r.many.SubmissionTable(),
+      participants: r.many.ParticipantTable({
+        from: r.EventTable.id,
+        to: r.ParticipantTable.eventId,
+      }),
+      challenges: r.many.ChallengeTable({
+        from: r.EventTable.id,
+        to: r.ChallengeTable.eventId,
+      }),
+      submissions: r.many.SubmissionTable({
+        from: r.EventTable.id,
+        to: r.SubmissionTable.eventId,
+      }),
     },
 
     // SubmissionTable relations
