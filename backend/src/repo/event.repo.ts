@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { EventTable } from "../db/schema/schema";
-import { db } from "./../db/index";
+import { db } from "../db";
 
 export const getAllEvents = async () => {
   try {
