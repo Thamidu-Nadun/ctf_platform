@@ -32,6 +32,22 @@ export const getCategoryById = async (id: number) => {
   }
 };
 
+export const getCategoryByName = async (name: string) => {
+  try {
+    const category = await db.query.CategoryTable.findFirst({
+      where: { name },
+    });
+    return category;
+  } catch (error) {
+    console.error("Error fetching category by name:", error);
+    if (error instanceof Error) {
+      console.error("Error Cause: ", error.cause);
+      console.log("Error Message: ", error.message);
+    }
+    throw error;
+  }
+};
+
 export const createCategory = async (name: string) => {
   try {
     const category = await db.insert(CategoryTable).values({ name }).returning({
