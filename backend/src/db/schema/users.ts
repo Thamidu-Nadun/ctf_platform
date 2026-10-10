@@ -2,7 +2,7 @@ import { index, pgEnum, pgTable, varchar } from "drizzle-orm/pg-core";
 
 export const userRole = pgEnum("user_role", ["admin", "user"]);
 
-export const userTable = pgTable(
+export const UserTable = pgTable(
   "users",
   {
     id: varchar("id", { length: 50 })
