@@ -4,3 +4,4 @@ export * from "./challenge";
 export * from "./participant";
 export * from "./submission";
 export * from "./category";
+export * from "./instance";
