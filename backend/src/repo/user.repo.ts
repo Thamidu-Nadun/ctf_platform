@@ -1,9 +1,10 @@
-import { userTable } from "./../db/schema/schema";
+import { UserTable } from "./../db/schema/schema";
 import { db } from "../db";
+import { eq } from "drizzle-orm";
 
 export const getAllUsers = async () => {
   try {
-    const users = await db.query.userTable.findMany();
+    const users = await db.query.UserTable.findMany();
     return users;
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -18,12 +19,28 @@ export const getAllUsers = async () => {
 
 export const getUserById = async (id: string) => {
   try {
-    const user = await db.query.userTable.findFirst({
+    const user = await db.query.UserTable.findFirst({
       where: { id },
     });
     return user;
   } catch (error) {
     console.error("Error fetching user by ID:", error);
+    if (error instanceof Error) {
+      console.error("Error Cause: ", error.cause);
+      console.log("Error Message: ", error.message);
+    }
+    throw error;
+  }
+};
+
+export const getUserByEmail = async (email: string) => {
+  try {
+    const user = await db.query.UserTable.findFirst({
+      where: { email },
+    });
+    return user;
+  } catch (error) {
+    console.error("Error fetching user by email:", error);
     if (error instanceof Error) {
       console.error("Error Cause: ", error.cause);
       console.log("Error Message: ", error.message);
@@ -38,29 +55,44 @@ export const createUser = async (
   password: string,
 ) => {
   try {
-    const existingUser = await db.query.userTable.findFirst({
-      where: { email },
-    });
-    if (existingUser) {
-      throw new Error(`User with this ${email} email already exists`);
-    }
-
     const user = await db
-      .insert(userTable)
+      .insert(UserTable)
       .values({
         name,
         email,
         password,
       })
       .returning({
-        id: userTable.id,
-        name: userTable.name,
-        email: userTable.email,
-        role: userTable.role,
+        id: UserTable.id,
+        name: UserTable.name,
+        email: UserTable.email,
+        role: UserTable.role,
       });
     return user;
   } catch (error) {
     console.error("Error creating user:", error);
+    if (error instanceof Error) {
+      console.error("Error Cause: ", error.cause);
+      console.log("Error Message: ", error.message);
+    }
+    throw error;
+  }
+};
+
+export const deleteUser = async (id: string) => {
+  try {
+    const deletedUser = await db
+      .delete(UserTable)
+      .where(eq(UserTable.id, id))
+      .returning({
+        id: UserTable.id,
+        name: UserTable.name,
+        email: UserTable.email,
+        role: UserTable.role,
+      });
+    return deletedUser;
+  } catch (error) {
+    console.error("Error deleting user:", error);
     if (error instanceof Error) {
       console.error("Error Cause: ", error.cause);
       console.log("Error Message: ", error.message);
