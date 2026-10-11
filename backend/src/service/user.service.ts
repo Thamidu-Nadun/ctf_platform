@@ -11,6 +11,17 @@ export const getUserById = async (id: string) => {
   return user;
 };
 
+export const loginUser = async (email: string, password: string) => {
+  const user = await userRepo.getUserByEmail(email);
+  if (!user) {
+    throw new NotFoundError(`User name or password is incorrect`);
+  }
+  if (user.password !== password) {
+    throw new Error("User name or password is incorrect");
+  }
+  return user;
+};
+
 export const createUser = async (
   name: string,
   email: string,
