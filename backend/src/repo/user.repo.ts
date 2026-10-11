@@ -49,6 +49,22 @@ export const getUserByEmail = async (email: string) => {
   }
 };
 
+export const getUserByName = async (name: string) => {
+  try {
+    const user = await db.query.UserTable.findFirst({
+      where: { name },
+    });
+    return user;
+  } catch (error) {
+    console.error("Error fetching user by name:", error);
+    if (error instanceof Error) {
+      console.error("Error Cause: ", error.cause);
+      console.log("Error Message: ", error.message);
+    }
+    throw error;
+  }
+};
+
 export const createUser = async (
   name: string,
   email: string,
@@ -71,6 +87,40 @@ export const createUser = async (
     return user;
   } catch (error) {
     console.error("Error creating user:", error);
+    if (error instanceof Error) {
+      console.error("Error Cause: ", error.cause);
+      console.log("Error Message: ", error.message);
+    }
+    throw error;
+  }
+};
+
+export const updateUser = async (
+  id: string,
+  name: string,
+  email: string,
+  password: string,
+  role: "user" | "admin",
+) => {
+  try {
+    const user = await db
+      .update(UserTable)
+      .set({
+        name,
+        email,
+        password,
+        role,
+      })
+      .where(eq(UserTable.id, id))
+      .returning({
+        id: UserTable.id,
+        name: UserTable.name,
+        email: UserTable.email,
+        role: UserTable.role,
+      });
+    return user;
+  } catch (error) {
+    console.error("Error updating user:", error);
     if (error instanceof Error) {
       console.error("Error Cause: ", error.cause);
       console.log("Error Message: ", error.message);

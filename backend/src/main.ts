@@ -1,6 +1,7 @@
 import express from "express";
-import instanceController from "./controller/instanceController";
+import instanceController from "./controller/instance.controller";
 import userController from "./controller/user.controller";
+import eventController from "./controller/event.controller";
 import errorHandler from "./middleware/errorHandler";
 import "dotenv/config";
 
@@ -11,6 +12,7 @@ app.get("/", (req, res) => {
   res.send({ message: "Hello, World!" });
 });
 
+app.use("/event", eventController);
 app.use("/instance", instanceController);
 app.use("/user", userController);
 app.use(errorHandler);

@@ -44,8 +44,11 @@ router.post("/:challengeName", async (req: Request, res: Response) => {
       message: "Instance created successfully",
       data: instance,
     });
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+  } catch (err) {
+    if (err instanceof Error) {
+      return res.status(400).json({ error: err.message });
+    }
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

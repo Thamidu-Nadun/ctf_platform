@@ -24,6 +24,33 @@ export const getInstanceById = async (id: string) => {
   }
 };
 
+/**
+ * In here it uses composite key that includes userId, challengeId to get the instance. This is because we want to make sure that the user can only access their own instance for a specific challenge.
+ * @param userId : string - The id of the user
+ * @param challengeId : number - The id of the challenge
+ * @returns InstanceTable | null
+ */
+export const getInstancesByUserAndChallengeId = async (
+  userId: string,
+  challengeId: number,
+) => {
+  try {
+    const instance = await db.query.InstanceTable.findFirst({
+      where: {
+        userId: userId,
+        challengeId: challengeId,
+      },
+    });
+    return instance;
+  } catch (error) {
+    console.error(
+      `Error fetching instance for user ${userId} and challenge ${challengeId}:`,
+      error,
+    );
+    throw error;
+  }
+};
+
 export const createInstance = async (
   environmentId: number,
   challengeId: number,
