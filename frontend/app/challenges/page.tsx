@@ -254,8 +254,12 @@ export default function ChallengesPage() {
                   {item.solves} Solves
                 </span>
 
-                <button className="bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-slate-200 text-xs px-4 py-2 rounded font-bold transition flex items-center gap-1.5">
-                  <Play className="w-3.5 h-3.5" /> LAUNCH TARGET
+                <button
+                  className="bg-slate-800 hover:bg-emerald-500 hover:text-slate-950
+                 text-slate-200 text-xs px-4 py-2 rounded font-bold transition 
+                 flex items-center gap-1.5 hover:cursor-pointer"
+                >
+                  <Play className="w-3.5 h-3.5" /> VIEW TARGET
                 </button>
               </div>
             </div>
