@@ -1,92 +1,20 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-
+import { ArrowRight, Network, ShieldCheck, Terminal } from "lucide-react";
+import NavBar from "@/Components/platform/NavBar";
 export default function Home() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem("userLoggedIn");
-    if (!isLoggedIn) {
-      router.push("/login");
-    } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLoading(false);
-    }
-  }, [router]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-slate-950 text-emerald-400 font-mono flex items-center justify-center">
-        Authenticating...
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-mono">
-      {/* Top Navbar */}
-      <nav className="flex items-center justify-between p-4 border-b border-slate-800 max-w-7xl mx-auto">
-        <div className="flex items-center gap-2">
-          <div className="text-emerald-400 font-bold text-lg">RAVEN//TRACE</div>
-          <span className="text-[10px] text-red-500 border border-red-500/40 bg-red-950/30 px-1.5 py-0.5 rounded">
-            SOC CTF PLATFORM v2.6
-          </span>
+  return <div className="min-h-screen bg-slate-950 text-slate-100"><NavBar />
+    <main className="mx-auto max-w-7xl px-5 py-20 md:py-28">
+      <div className="grid items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
+        <div><p className="mb-6 text-xs font-semibold tracking-[.2em] text-emerald-400">HANDS-ON SECURITY. REAL INVESTIGATIONS.</p>
+          <h1 className="text-4xl font-black leading-tight tracking-tight md:text-6xl">Breach the matrix.<br /><span className="text-emerald-400">Trace the threat.</span></h1>
+          <p className="mt-6 max-w-xl text-base leading-8 text-slate-400">Step into the SOC workspace. Follow the evidence, investigate network traffic, and sharpen your skills with hands-on cybersecurity challenges.</p>
+          <div className="mt-8 flex flex-wrap gap-3"><Link href="/challenge" className="flex items-center gap-3 rounded-lg bg-emerald-400 px-6 py-3 font-bold text-slate-950 hover:bg-emerald-300">Explore challenges <ArrowRight size={18} /></Link><Link href="/events" className="rounded-lg border border-slate-700 px-6 py-3 hover:border-emerald-500">Browse events</Link></div>
+          <p className="mt-5 text-xs text-slate-500">Explore first. Log in when you are ready.</p>
         </div>
-
-        <div className="flex items-center gap-6 text-sm">
-          <Link href="/challenges" className="hover:text-emerald-400">
-            &gt;_ Challenges
-          </Link>
-          <Link href="/events" className="hover:text-emerald-400">
-            ⚡ Events
-          </Link>
-
-          {/* Admin Tab Button */}
-          <Link
-            href="/admin"
-            className="text-red-400 hover:text-red-300 font-bold border border-red-900/60 bg-red-950/40 px-3 py-1 rounded"
-          >
-            🛡️ Admin
-          </Link>
-        </div>
-      </nav>
-
-      {/* Main Content */}
-      <div className="flex flex-col items-center justify-center text-center mt-20 px-4">
-        <span className="text-xs text-red-500 bg-red-950/50 border border-red-800 px-3 py-1 rounded-full mb-4">
-          🔥 SYSTEM DEFCON-1 LEVEL ALERT :: INTRUSION DETECTED
-        </span>
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-white max-w-3xl">
-          BREACH THE MATRIX. <br />
-          <span className="text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">
-            TRACE THE THREAT ACTOR.
-          </span>
-        </h1>
-        <p className="text-slate-400 text-sm max-w-2xl mt-4">
-          Step into a live Security Operations Center (SOC) incident workspace.
-          Investigate network PCAPs, reverse malware binaries, exploit live web
-          targets, and capture flags.
-        </p>
-
-        <div className="flex gap-4 mt-8">
-          <Link
-            href="/challenges"
-            className="bg-emerald-500 text-slate-950 font-bold px-6 py-3 rounded hover:bg-emerald-400 transition"
-          >
-            BROWSE CHALLENGES &rarr;
-          </Link>
-          <Link
-            href="/events"
-            className="border border-slate-700 bg-slate-900/60 px-6 py-3 rounded hover:bg-slate-800 transition"
-          >
-            VIEW ACTIVE EVENTS
-          </Link>
+        <div className="overflow-hidden rounded-2xl border border-slate-700 bg-slate-900/60 shadow-[0_0_80px_#10b98110]"><div className="flex gap-2 border-b border-slate-800 px-5 py-4"><span className="h-2 w-2 rounded-full bg-red-400" /><span className="h-2 w-2 rounded-full bg-amber-400" /><span className="h-2 w-2 rounded-full bg-emerald-400" /><span className="ml-auto text-[10px] tracking-widest text-slate-500">INVESTIGATION WORKSPACE</span></div>
+          <div className="space-y-6 p-8 text-sm"><div className="flex items-center gap-3 text-emerald-400"><Terminal size={22} /><span>agent@raven:~$ begin_investigation</span></div><div className="border-l border-slate-700 pl-5 leading-8 text-slate-400">01 / Discover the target<br />02 / Launch your environment<br />03 / Follow the evidence<br /><span className="text-emerald-300">04 / Capture the flag</span></div><div className="rounded-lg border border-emerald-900 bg-emerald-950/30 p-4 text-xs text-emerald-300">Your next investigation starts here. <span className="animate-pulse">▍</span></div></div>
         </div>
       </div>
-    </div>
-  );
+      <div className="mt-20 grid gap-4 md:grid-cols-3">{[{Icon:Network,title:"Follow the packets",text:"Investigate network evidence and uncover hidden signals."},{Icon:Terminal,title:"Explore live targets",text:"Practice in dedicated challenge environments."},{Icon:ShieldCheck,title:"Build your instincts",text:"Solve challenges across security disciplines."}].map(({Icon,title,text})=><div key={title} className="rounded-xl border border-slate-800 bg-slate-900/30 p-6"><Icon className="mb-4 text-emerald-400" size={24} /><h2 className="font-bold">{title}</h2><p className="mt-2 text-sm leading-6 text-slate-500">{text}</p></div>)}</div>
+    </main></div>;
 }
