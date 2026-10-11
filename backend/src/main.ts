@@ -2,6 +2,7 @@ import express from "express";
 import instanceController from "./controller/instance.controller";
 import userController from "./controller/user.controller";
 import eventController from "./controller/event.controller";
+import environmentController from "./controller/environment.controller";
 import errorHandler from "./middleware/errorHandler";
 import "dotenv/config";
 
@@ -15,6 +16,7 @@ app.get("/", (req, res) => {
 app.use("/event", eventController);
 app.use("/instance", instanceController);
 app.use("/user", userController);
+app.use("/env", environmentController);
 app.use(errorHandler);
 
 app.listen(3000, () => {

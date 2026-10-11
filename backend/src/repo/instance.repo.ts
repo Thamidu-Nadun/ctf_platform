@@ -60,7 +60,7 @@ export const createInstance = async (
   expiresAt: Date,
 ) => {
   try {
-    const newInstance = await db
+    const [newInstance] = await db
       .insert(InstanceTable)
       .values({
         environmentId,
