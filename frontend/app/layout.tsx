@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CTF Platform",
-  description:
-    "A platform for hosting and participating in Capture The Flag (CTF) competitions.",
+  title: "RAVEN//TRACE | Security Workspace",
+  description: "Hands-on cybersecurity challenges and incident investigations.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
