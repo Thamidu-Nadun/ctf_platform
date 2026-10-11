@@ -18,7 +18,7 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:eventId", async (req: Request, res: Response) => {
   try {
     const { eventId } = req.params;
     if (!eventId || Array.isArray(eventId)) {
