@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import instanceController from "./controller/instance.controller";
 import userController from "./controller/user.controller";
 import eventController from "./controller/event.controller";
@@ -19,6 +19,20 @@ const app = express();
 app.use(express.json());
 app.use(cors({ origin: true, credentials: true }));
 
+const apiRouter = Router();
+apiRouter.use("/event", eventController);
+apiRouter.use("/instance", instanceController);
+apiRouter.use("/user", userController);
+apiRouter.use("/category", categoryController);
+apiRouter.use("/challenge", challengeController);
+apiRouter.use("/participant", participantController);
+apiRouter.use("/submission", submissionController);
+apiRouter.use("/env", environmentController);
+apiRouter.use("/file", fileController);
+apiRouter.use("/flag", flagController);
+apiRouter.use("/hint", hintController);
+apiRouter.use("/proxy", proxyController);
+
 app.get("/", (req, res) => {
   res.send({ message: "Hello, World!" });
 });
@@ -35,6 +49,7 @@ app.use("/file", fileController);
 app.use("/flag", flagController);
 app.use("/hint", hintController);
 app.use("/proxy", proxyController);
+app.use("/api", apiRouter);
 app.use(errorHandler);
 
 app.listen(3000, () => {
