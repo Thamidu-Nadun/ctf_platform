@@ -76,3 +76,45 @@ export class BadGatewayError extends Error {
     this.name = "BadGatewayError";
   }
 }
+export class ContainerCreationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ContainerCreationError";
+  }
+}
+export class ContainerDeletionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ContainerDeletionError";
+  }
+}
+export class ContainerNotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ContainerNotFoundError";
+  }
+}
+export class ContainerTimeoutError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ContainerTimeoutError";
+  }
+}
+export class ContainerError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ContainerError";
+  }
+}
+export class ContainerAlreadyExistsError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ContainerAlreadyExistsError";
+  }
+}
+export class ContainerNotRunningError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ContainerNotRunningError";
+  }
+}

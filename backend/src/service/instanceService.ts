@@ -1,7 +1,12 @@
 import type { InstanceInfo } from "../types/instance";
 import { createInstance as createContainerInstance } from "../libs/instanceManager";
-import { ConflictError, NotFoundError } from "../libs/errors";
+import {
+  ConflictError,
+  ContainerCreationError,
+  NotFoundError,
+} from "../libs/errors";
 import * as instanceRepo from "../repo/instance.repo";
+import { getChallengeById } from "../repo/challenge.repo";
 import type { InstanceReq } from "../models/instance.model";
 
 const challenges: string[] = ["the_endpoint", "ping_me"];
@@ -78,6 +83,13 @@ const createInstanceV2 = async (instanceData: InstanceReq) => {
         `Instance for user ${instanceData.userId} and challenge ${instanceData.challengeId} already exists`,
       );
     }
+    // get challenge info from the database
+    const challenge = await getChallengeById(instanceData.challengeId);
+    if (!challenge) {
+      throw new NotFoundError(
+        `Challenge with ID ${instanceData.challengeId} not found`,
+      );
+    }
     // Create a new instance in the database
     const time = new Date();
     const expiresAt = new Date(time.getTime() + 60 * 60 * 1000); // 1 hour from now
@@ -89,6 +101,16 @@ const createInstanceV2 = async (instanceData: InstanceReq) => {
       time,
       expiresAt,
     );
+    // create a new container for the challenge
+    const container = await createContainerInstance({
+      imageName: challenge.name,
+      timeout: 60 * 60, // 1 hour
+    });
+    if (!container) {
+      throw new ContainerCreationError(
+        `Failed to create container for challenge ${challenge.name}`,
+      );
+    }
     return instance;
   } catch (error) {
     console.error("Error creating instance:", error);
@@ -111,4 +133,10 @@ const deleteInstance = async (id: string) => {
   }
 };
 
-export { getInstances, getInstanceById, createInstance, deleteInstance };
+export {
+  getInstances,
+  getInstanceById,
+  createInstance,
+  createInstanceV2,
+  deleteInstance,
+};

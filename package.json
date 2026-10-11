@@ -26,9 +26,10 @@
     "lint-staged": "^17.6.0"
   },
   "lint-staged": {
-    "*.{js,ts,tsx}": "eslint --fix"
+    "frontend/**/*.{js,ts,tsx}": "eslint --config frontend/eslint.config.mjs --fix",
+    "backend/**/*.{js,ts,tsx}": "eslint --config backend/eslint.config.mjs --fix"
   },
   "devDependencies": {
-    "eslint": "^10.12.0"
+    "eslint": "^9.39.5"
   }
 }
