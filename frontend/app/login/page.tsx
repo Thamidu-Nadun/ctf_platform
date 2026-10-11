@@ -3,26 +3,39 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { login } from "@/services/user.service";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !password) {
+    if (!email || !password) {
       setError("Please fill all fields!");
       return;
     }
 
-    // Login success simulation
-    localStorage.setItem("userLoggedIn", "true");
-    localStorage.setItem("username", username);
-
-    // Redirect to Home Page
-    router.push("/");
+    setBusy(true);
+    setError("");
+    try {
+      const { token } = await login({ email, password });
+      const tokenPayload = token.split(".")[1];
+      const claims = JSON.parse(
+        atob(tokenPayload.replace(/-/g, "+").replace(/_/g, "/")),
+      ) as { id?: string };
+      if (!claims.id) throw new Error("Login response did not include a user ID.");
+      document.cookie = `userId=${encodeURIComponent(claims.id)}; path=/; max-age=604800; samesite=lax`;
+      localStorage.setItem("userLoggedIn", "true");
+      router.push("/");
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Could not log in.");
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -49,14 +62,14 @@ export default function LoginPage() {
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
             <label className="block text-xs text-slate-400 mb-1">
-              USERNAME / HANDLE
+              EMAIL ADDRESS
             </label>
             <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
-              placeholder="e.g., agent_raven"
+              placeholder="agent@raven.trace"
               required
             />
           </div>
@@ -77,15 +90,22 @@ export default function LoginPage() {
 
           <button
             type="submit"
+            disabled={busy}
             className="w-full py-2.5 bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500 text-emerald-400 font-bold rounded text-sm transition"
           >
-            ENTER WORKSPACE
+            {busy ? "AUTHENTICATING..." : "ENTER WORKSPACE"}
           </button>
         </form>
         <div className="mt-6 border-t border-slate-800 pt-5 text-center text-sm">
-          <Link href="/register" className="text-emerald-400 hover:underline">Don&apos;t have an account?</Link>
+          <Link href="/register" className="text-emerald-400 hover:underline">
+            Don&apos;t have an account?
+          </Link>
         </div>
-        <div className="mt-3 text-center text-xs"><Link href="/" className="text-slate-500 hover:text-slate-300">Back to home</Link></div>
+        <div className="mt-3 text-center text-xs">
+          <Link href="/" className="text-slate-500 hover:text-slate-300">
+            Back to home
+          </Link>
+        </div>
       </div>
     </div>
   );

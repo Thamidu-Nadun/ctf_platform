@@ -1,5 +1,8 @@
 import type { InstanceInfo } from "../types/instance";
-import { createInstance as createContainerInstance } from "../libs/instanceManager";
+import {
+  createInstance as createContainerInstance,
+  getContainerTarget,
+} from "../libs/instanceManager";
 import {
   ConflictError,
   ContainerCreationError,
@@ -48,6 +51,7 @@ const createInstance = async (challengeName: string): Promise<InstanceInfo> => {
   }
   // Create a new container for the challenge
   const container = await createContainerInstance({
+    name: `c-${challengeName}-${Date.now()}`,
     imageName: challengeName,
   });
   // save the instance to the database
@@ -93,6 +97,7 @@ const createInstanceV2 = async (instanceData: InstanceReq) => {
     // Create a new instance in the database
     const time = new Date();
     const expiresAt = new Date(time.getTime() + 60 * 60 * 1000); // 1 hour from now
+
     const instance = await instanceRepo.createInstance(
       instanceData.environmentId,
       instanceData.challengeId,
@@ -100,10 +105,17 @@ const createInstanceV2 = async (instanceData: InstanceReq) => {
       instanceData.status,
       time,
       expiresAt,
+      "",
     );
+    if (!instance) {
+      throw new Error("Failed to create instance");
+    }
+
     // create a new container for the challenge
+    const containerName = `c-${instance.id}`;
     const container = await createContainerInstance({
       imageName: challenge.name,
+      name: containerName,
       timeout: 60 * 60, // 1 hour
     });
     if (!container) {
@@ -111,7 +123,23 @@ const createInstanceV2 = async (instanceData: InstanceReq) => {
         `Failed to create container for challenge ${challenge.name}`,
       );
     }
-    return instance;
+
+    const instanceUrl = await getContainerTarget(container.name);
+    const [updatedInstance] = await instanceRepo.updateInstance(
+      instance.id,
+      instanceData.environmentId,
+      instanceData.challengeId,
+      instanceData.userId,
+      instanceData.status,
+      time,
+      expiresAt,
+      instanceUrl,
+    );
+    if (!updatedInstance) {
+      throw new Error("Failed to update instance target URL");
+    }
+
+    return updatedInstance;
   } catch (error) {
     console.error("Error creating instance:", error);
     throw error;

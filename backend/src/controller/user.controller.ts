@@ -30,6 +30,11 @@ router.post("/login", async (req: Request, res: Response) => {
       process.env.SECRET_KEY || "default_secret",
       { expiresIn: "7d" },
     );
+    res.cookie("userId", user.id, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    });
     res.json({ token });
   } catch (error) {
     console.error("Error logging in user:", error);

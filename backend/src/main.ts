@@ -7,11 +7,17 @@ import challengeController from "./controller/challenge.controller";
 import participantController from "./controller/participant.controller";
 import submissionController from "./controller/submission.controller";
 import environmentController from "./controller/environment.controller";
+import fileController from "./controller/file.controller";
+import proxyController from "./controller/proxy.controller";
+import flagController from "./controller/flag.controller";
+import hintController from "./controller/hint.controller";
 import errorHandler from "./middleware/errorHandler";
 import "dotenv/config";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
+app.use(cors({ origin: true, credentials: true }));
 
 app.get("/", (req, res) => {
   res.send({ message: "Hello, World!" });
@@ -25,6 +31,10 @@ app.use("/challenge", challengeController);
 app.use("/participant", participantController);
 app.use("/submission", submissionController);
 app.use("/env", environmentController);
+app.use("/file", fileController);
+app.use("/flag", flagController);
+app.use("/hint", hintController);
+app.use("/proxy", proxyController);
 app.use(errorHandler);
 
 app.listen(3000, () => {

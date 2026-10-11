@@ -58,6 +58,7 @@ export const createInstance = async (
   status: "pending" | "running" | "stopped" | "error",
   createdAt: Date,
   expiresAt: Date,
+  targetUrl: string,
 ) => {
   try {
     const [newInstance] = await db
@@ -69,6 +70,7 @@ export const createInstance = async (
         status,
         createdAt,
         expiresAt,
+        targetUrl,
       })
       .returning({
         id: InstanceTable.id,
@@ -78,6 +80,7 @@ export const createInstance = async (
         status: InstanceTable.status,
         createdAt: InstanceTable.createdAt,
         expiresAt: InstanceTable.expiresAt,
+        targetUrl: InstanceTable.targetUrl,
       });
     return newInstance;
   } catch (error) {
@@ -93,6 +96,7 @@ export const updateInstance = async (
   status: "pending" | "running" | "stopped" | "error",
   createdAt: Date,
   expiresAt: Date,
+  targetUrl: string,
 ) => {
   try {
     const updatedInstance = await db
@@ -104,6 +108,7 @@ export const updateInstance = async (
         status,
         createdAt,
         expiresAt,
+        targetUrl,
       })
       .where(eq(InstanceTable.id, id))
       .returning({
@@ -114,6 +119,7 @@ export const updateInstance = async (
         status: InstanceTable.status,
         createdAt: InstanceTable.createdAt,
         expiresAt: InstanceTable.expiresAt,
+        targetUrl: InstanceTable.targetUrl,
       });
     return updatedInstance;
   } catch (error) {
@@ -135,6 +141,7 @@ export const deleteInstance = async (id: string) => {
         status: InstanceTable.status,
         createdAt: InstanceTable.createdAt,
         expiresAt: InstanceTable.expiresAt,
+        targetUrl: InstanceTable.targetUrl,
       });
     return deletedInstance;
   } catch (error) {

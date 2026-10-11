@@ -1,5 +1,4 @@
 import { getDocker } from "../config/config";
-import crypto from "crypto";
 import type { DockerProgressEvent } from "../types/container";
 
 type Container = {
@@ -14,6 +13,7 @@ type Container = {
 // create a new container with the given name and image
 type CreateContainerOptions = {
   imageName: string;
+  name: string;
   timeout?: number;
 };
 
@@ -27,7 +27,7 @@ const docker = getDocker();
 const createInstance = async (
   opt: CreateContainerOptions,
 ): Promise<Container> => {
-  const { imageName, timeout = 30000 } = opt;
+  const { imageName, name, timeout = 30000 } = opt;
   console.log(`create instance with image ${imageName} and timeout ${timeout}`);
   try {
     // 1. check if the image exists
@@ -44,7 +44,8 @@ const createInstance = async (
   try {
     // 2. if it is, create the container
     console.log(`create container with image ${imageName}`);
-    const container = await createContainer(imageName);
+    const container = await createContainer(imageName, name, timeout);
+    await docker.getContainer(container.id).start();
     // return the container id
     return container;
   } catch (err) {
@@ -60,20 +61,26 @@ const createInstance = async (
  */
 const createContainer = async (
   imageName: string,
+  name: string,
   timeout: number = 30000,
 ): Promise<Container> => {
   try {
-    const instanceName = `instance-${crypto.randomUUID().toString()}`;
     const container = await docker.createContainer({
       Image: imageName,
-      name: instanceName,
+      name: name,
+      ExposedPorts: {
+        "5000/tcp": {},
+      },
       HostConfig: {
         NetworkMode: "ctf_network",
+        PortBindings: {
+          "5000/tcp": [{ HostPort: "" }],
+        },
       },
     });
     return {
       id: container.id,
-      name: instanceName,
+      name: name,
       image: imageName,
       ports: [],
       networks: ["ctf_network"],
@@ -122,4 +129,14 @@ const pullImage = async (imageName: string): Promise<void> => {
   });
 };
 
-export { createInstance };
+const getContainerTarget = async (name: string): Promise<string> => {
+  const container = docker.getContainer(name);
+  const inspection = await container.inspect();
+  const port = inspection.NetworkSettings.Ports["5000/tcp"]?.[0]?.HostPort;
+  if (!port) {
+    throw new Error(`Container ${name} has no published port for 5000/tcp`);
+  }
+  return `http://127.0.0.1:${port}`;
+};
+
+export { createInstance, getContainerTarget };

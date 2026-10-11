@@ -38,4 +38,5 @@ export const InstanceTable = pgTable("instances", {
   status: InstanceStatus("status").notNull().default("pending"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   expiresAt: timestamp("expires_at").notNull().defaultNow(),
+  targetUrl: text("target_url").notNull(),
 });
