@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
 import * as instanceService from "../service/instanceService";
+import type { InstanceReq } from "../models/instance.model";
 
 const router: Router = Router();
 
@@ -31,14 +32,19 @@ router.get("/:id", (req: Request, res: Response) => {
   });
 });
 
-router.post("/:challengeName", async (req: Request, res: Response) => {
-  const { challengeName } = req.params;
-  if (!challengeName || Array.isArray(challengeName)) {
-    return res.status(400).json({ error: "Missing challenge name" });
+router.post("/", async (req: Request, res: Response) => {
+  const challengeData: InstanceReq = req.body;
+  if (
+    !challengeData ||
+    !challengeData.challengeId ||
+    !challengeData.environmentId ||
+    !challengeData.userId
+  ) {
+    return res.status(400).json({ error: "Missing required fields" });
   }
-
   try {
-    const instance = await instanceService.createInstance(challengeName);
+    // const instance = await instanceService.createInstance(challengeName);
+    const instance = await instanceService.createInstanceV2(challengeData);
     return res.status(201).json({
       statusCode: 201,
       message: "Instance created successfully",
