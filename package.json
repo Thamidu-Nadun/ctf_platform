@@ -29,6 +29,6 @@
     "*.{js,ts,tsx}": "eslint --fix"
   },
   "devDependencies": {
-    "eslint": "^10.12.0"
+    "eslint": "^9.39.5"
   }
 }
