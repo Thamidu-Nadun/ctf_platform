@@ -29,6 +29,7 @@ export const ChallengeTable = pgTable("challenges", {
   categoryId: serial("category_id")
     .references(() => CategoryTable.id)
     .notNull(),
+  assets: text("assets").array(),
 });
 
 export const HintsTable = pgTable("hints", {

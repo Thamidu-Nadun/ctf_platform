@@ -35,6 +35,7 @@ export const createChallenge = async (challengeData: ChallengeReq) => {
       challengeData.visibility,
       challengeData.eventId,
       challengeData.categoryId,
+      challengeData.assets,
     );
     return createdChallenge;
   } catch (error) {
@@ -61,6 +62,7 @@ export const updateChallenge = async (
       challengeData.visibility,
       challengeData.eventId,
       challengeData.categoryId,
+      challengeData.assets,
     );
     return updatedChallenge;
   } catch (error) {

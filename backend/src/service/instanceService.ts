@@ -3,11 +3,7 @@ import {
   createInstance as createContainerInstance,
   getContainerTarget,
 } from "../libs/instanceManager";
-import {
-  ConflictError,
-  ContainerCreationError,
-  NotFoundError,
-} from "../libs/errors";
+import { ContainerCreationError, NotFoundError } from "../libs/errors";
 import * as instanceRepo from "../repo/instance.repo";
 import { getChallengeById } from "../repo/challenge.repo";
 import type { InstanceReq } from "../models/instance.model";
@@ -83,9 +79,13 @@ const createInstanceV2 = async (instanceData: InstanceReq) => {
         instanceData.challengeId,
       );
     if (existingInstance) {
-      throw new ConflictError(
-        `Instance for user ${instanceData.userId} and challenge ${instanceData.challengeId} already exists`,
-      );
+      const hasActiveTarget =
+        existingInstance.targetUrl &&
+        new Date(existingInstance.expiresAt).getTime() > Date.now();
+      if (hasActiveTarget) {
+        return existingInstance;
+      }
+      await instanceRepo.deleteInstance(existingInstance.id);
     }
     // get challenge info from the database
     const challenge = await getChallengeById(instanceData.challengeId);

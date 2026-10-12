@@ -6,6 +6,7 @@ export type ChallengeReq = {
   visibility: boolean;
   eventId: number;
   categoryId: number;
+  assets: string[]; // Array of asset URLs or identifiers
 };
 
 export type ChallengeRes = {
@@ -17,4 +18,5 @@ export type ChallengeRes = {
   visibility: boolean;
   eventId: number;
   categoryId: number;
+  assets: string[]; // Array of asset URLs or identifiers
 };

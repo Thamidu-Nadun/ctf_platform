@@ -32,6 +32,7 @@ export const createChallenge = async (
   visibility: boolean,
   eventId: number,
   categoryId: number,
+  assets: string[] = [],
 ) => {
   try {
     const createdChallenge = await db
@@ -44,6 +45,7 @@ export const createChallenge = async (
         visibility,
         eventId,
         categoryId,
+        assets,
       })
       .returning({
         id: ChallengeTable.id,
@@ -54,6 +56,7 @@ export const createChallenge = async (
         visibility: ChallengeTable.visibility,
         eventId: ChallengeTable.eventId,
         categoryId: ChallengeTable.categoryId,
+        assets: ChallengeTable.assets,
       });
     return createdChallenge;
   } catch (error) {
@@ -71,6 +74,7 @@ export const updateChallenge = async (
   visibility: boolean,
   eventId: number,
   categoryId: number,
+  assets: string[] = [],
 ) => {
   try {
     const updatedChallenge = await db
@@ -83,6 +87,7 @@ export const updateChallenge = async (
         visibility,
         eventId,
         categoryId,
+        assets,
       })
       .where(eq(ChallengeTable.id, id))
       .returning({
@@ -94,6 +99,7 @@ export const updateChallenge = async (
         visibility: ChallengeTable.visibility,
         eventId: ChallengeTable.eventId,
         categoryId: ChallengeTable.categoryId,
+        assets: ChallengeTable.assets,
       });
     return updatedChallenge;
   } catch (error) {
@@ -116,6 +122,7 @@ export const deleteChallenge = async (id: number) => {
         visibility: ChallengeTable.visibility,
         eventId: ChallengeTable.eventId,
         categoryId: ChallengeTable.categoryId,
+        assets: ChallengeTable.assets,
       });
     return deletedChallenge;
   } catch (error) {

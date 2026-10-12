@@ -5,8 +5,8 @@ import type { InstanceReq } from "../models/instance.model";
 
 const router: Router = Router();
 
-router.get("/", (req: Request, res: Response) => {
-  const instances = instanceService.getInstances();
+router.get("/", async (req: Request, res: Response) => {
+  const instances = await instanceService.getInstances();
   return res.status(200).json({
     statusCode: 200,
     message: "Instances retrieved successfully",
