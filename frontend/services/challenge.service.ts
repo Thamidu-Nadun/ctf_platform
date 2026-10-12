@@ -11,6 +11,7 @@ export type Challenge = {
   visibility: boolean;
   eventId: number;
   categoryId: number;
+  assets: string[];
 };
 
 export type ChallengeInput = Omit<Challenge, "id">;

@@ -5,7 +5,8 @@ export const apiFetch = async <T = unknown>(
   options: RequestInit = {},
 ): Promise<T> => {
   const isFormData = options.body instanceof FormData;
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const url = `${API_URL}${endpoint}`;
+  const response = await fetch(url, {
     ...options,
     credentials: "include",
     headers: {

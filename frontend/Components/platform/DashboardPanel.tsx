@@ -134,6 +134,7 @@ export default function DashboardPanel({ tab }: { tab: DashboardTab }) {
             visibility: data.get("visibility") === "on",
             eventId: Number(data.get("eventId")),
             categoryId: Number(data.get("categoryId")),
+            assets: fileUrl ? [fileUrl] : [],
           }),
         );
         const tags = String(data.get("tags") || "")

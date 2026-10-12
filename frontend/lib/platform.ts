@@ -7,6 +7,7 @@ export type Challenge = {
   visibility: boolean;
   eventId: number;
   categoryId: number;
+  assets: string[];
   tags?: string[];
   files?: ChallengeFile[];
   environmentId?: number;
