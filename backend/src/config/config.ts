@@ -2,10 +2,17 @@ import Docker from "dockerode";
 import s3 from "@aws-sdk/client-s3";
 import "dotenv/config";
 
-// const SOCKET_PATH = "/var/run/docker.sock";
+const SOCKET_PATH = "/var/run/docker.sock";
 
 export const getDocker = () => {
-  const docker = new Docker();
+  let docker: Docker;
+  if (process.platform === "linux") {
+    docker = new Docker({
+      socketPath: SOCKET_PATH,
+    });
+  } else {
+    docker = new Docker();
+  }
   return docker;
 };
 
